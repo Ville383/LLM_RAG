@@ -1,0 +1,6 @@
+huggingface-hub
+sentence-transformers
+faiss-cpu
+psutil
+nvidia-ml-py
+matplotlib

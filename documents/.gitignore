@@ -1,0 +1,6 @@
+*
+!.gitignore
+!create_doc.py
+!utils.py
+!_pokedex_knowledge_base.txt
+!README.md

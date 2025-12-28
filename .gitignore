@@ -1,0 +1,8 @@
+__pycache__
+.cache
+venv_cuda
+venv_dml
+venv_cpu
+vector_db
+gpu
+cpu_and_mobile
