@@ -25,10 +25,10 @@ class VectorDatabase:
 
     def encode_document(self, doc_path: str, save_path: str, verbose: bool = True):
         """
-        Encode a markdown document into vector embeddings and create a FAISS index.
+        Encode a document into vector embeddings and create a FAISS index.
         
         Args:
-            doc_path: Path to the markdown document
+            doc_path: Path to document
             save_path: Optional path to save the index and chunks to disk
         """
         # Read markdown file
