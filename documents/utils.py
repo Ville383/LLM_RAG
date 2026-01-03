@@ -26,10 +26,8 @@ def create_evolution_paths(evolutions):
     Returns:
         dict: {pokemon_form_id: [[path1], [path2], ...]}
     """
-    # Group entries by their tree ID
     trees = defaultdict(list)
     for entry in evolutions:
-        # Clean the grid data: handle "1 / span 2" or strings
         col = int(str(entry['grid_column']).split('/')[0].strip())
         row = int(str(entry['grid_row']).split('/')[0].strip())
         
@@ -40,33 +38,29 @@ def create_evolution_paths(evolutions):
     final_map = defaultdict(list)
 
     for _, members in trees.items():
-        # Build an adjacency list: parent_id -> [child_ids]
+        # Build: parent_id -> [child_ids]
         adj = defaultdict(list)
         
-        # Sort by column to ensure we process parents before children
         members.sort(key=lambda x: x['_c'])
         
         columns = defaultdict(list)
         for m in members:
             columns[m['_c']].append(m)
             
-        # Determine relationships
         for m in members:
             parent_col_idx = m['_c'] - 1
             if parent_col_idx in columns:
                 potential_parents = columns[parent_col_idx]
                 
-                # Match by row index
                 parent = next((p for p in potential_parents if p['_r'] == m['_r']), None)
                 
                 # If no exact row match, the first entry in the previous column is the parent
-                # (Common for branching base forms like Eevee or Tyrogue)
+                # Common for branching base forms like Eevee or Tyrogue
                 if not parent:
                     parent = potential_parents[0]
                 
                 adj[parent['pokemon_form_id']].append(m['pokemon_form_id'])
 
-        # 2. Find all unique paths from Column 1 (roots) to the leaves
         roots = [m['pokemon_form_id'] for m in members if m['_c'] == 1]
         all_paths = []
 
@@ -81,7 +75,7 @@ def create_evolution_paths(evolutions):
         for root_id in roots:
             find_paths_dfs(root_id, [root_id])
 
-        # 3. Map every Pokémon in this tree to every path they participate in
+        # Map every Pokémon in this tree to every path they participate in
         tree_pokemon_ids = {m['pokemon_form_id'] for m in members}
         for p_id in tree_pokemon_ids:
             for path in all_paths:
@@ -89,7 +83,6 @@ def create_evolution_paths(evolutions):
                     final_map[p_id].append(path)
 
     return dict(final_map)
-
 
 
 def clean_text(text: str):
